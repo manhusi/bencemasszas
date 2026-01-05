@@ -47,28 +47,24 @@ export const LANDING_DATA: LandingData = {
   "trust_signals": [
     {
       "type": "testimonial",
-      "content": "A botox fiatalos tekintetet ad, és a szemöldök emelése miatt kifejezőbb lett a szemem is.",
-      "source": "Bernadett"
+      "content": "Szakszerű és barátságos ellátásban volt része Édesanyámnak, aki gyorsan jutott reumatológiai kezelésekhez, aminek hatására most újra jól érzi magát. Nagyon...",
+      "source": "Gyöngyi Dobi",
+      "date": "1 éve",
+      "avatar": "https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=200&auto=format&fit=crop"
     },
     {
       "type": "testimonial",
-      "content": "Többek közt azt szeretem benne, hogy a ráncok mellett a fejfájásom is elmúlik.",
-      "source": "Éva"
+      "content": "Kiváló szakemberek, kedves, nyugodt szavak, figyelem. Csak a felsőfokon tudok szólni a centrumról.",
+      "source": "0207 szabé",
+      "date": "1 éve",
+      "avatar": "https://images.unsplash.com/photo-1595152452543-e5fc28ebc2b8?q=80&w=200&auto=format&fit=crop"
     },
     {
       "type": "testimonial",
-      "content": "Rengeteget fogytam, sajnos az arcomból is. A kezelés után ismét a régi arcom nézett vissza rám.",
-      "source": "Csilla"
-    },
-    {
-      "type": "testimonial",
-      "content": "Tetszik nagyon a mérgesránc nélküli arcom. Egy a baj, nem tudok a gyerekeimre csúnyán nézni!",
-      "source": "Katalin"
-    },
-    {
-      "type": "testimonial",
-      "content": "Imádom, amikor a kollégák csak pislognak, mitől vagyok ilyen kipihent. Köszönöm a doktornőnek, hogy ránctalan az arcom.",
-      "source": "Bea"
+      "content": "Nagy köszönöm a gyors, precíz ellátást! Kondorosi doktornő szakértelme és kedvessége miatt biztosan visszatérek még. :)",
+      "source": "Eszter Kiss-Jakabfy",
+      "date": "1 éve",
+      "avatar": "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=200&auto=format&fit=crop"
     }
   ]
 };

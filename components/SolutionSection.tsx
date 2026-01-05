@@ -26,26 +26,18 @@ export const SolutionSection: React.FC = () => {
       <div className="absolute top-0 right-0 w-1/3 h-full bg-gradient-to-l from-primary-800 to-transparent"></div>
       
       <div className="container mx-auto px-4 relative z-10 mb-16">
-        <div className="flex flex-col md:flex-row justify-between items-end gap-6">
-          <div className="max-w-2xl">
-            <span className="text-secondary-400 font-bold uppercase tracking-widest text-sm mb-3 block">Megoldásaink</span>
-            <h2 className="text-3xl md:text-5xl font-bold font-heading text-white mb-4">
-              Prémium Esztétikai Kezelések
-            </h2>
-            <p className="text-primary-100 text-lg max-w-xl">
-              A legmodernebb technológiák és szakértelem találkozása. Chatbotunk segít megtalálni a tökéleteset.
-            </p>
-          </div>
-          <button 
-             onClick={() => document.getElementById('chatbot-input')?.focus()}
-             className="text-white border border-white/30 px-6 py-3 rounded-xl hover:bg-white hover:text-primary-900 transition-all font-bold flex items-center gap-2"
-          >
-            Melyik való nekem? <ArrowRight size={18} />
-          </button>
+        <div className="flex flex-col items-center text-center max-w-3xl mx-auto">
+          <span className="text-secondary-400 font-bold uppercase tracking-widest text-sm mb-3 block">Megoldásaink</span>
+          <h2 className="text-3xl md:text-5xl font-bold font-heading text-white mb-6">
+            Prémium Esztétikai Kezelések
+          </h2>
+          <p className="text-primary-100 text-lg leading-relaxed">
+            A legmodernebb technológiák és szakértelem találkozása. Virtuális szakértőnk segít megtalálni a tökéleteset.
+          </p>
         </div>
       </div>
 
-      <div className="relative w-full overflow-hidden pb-8">
+      <div className="relative w-full overflow-hidden pb-12">
         <div className="flex w-max animate-marquee hover:[animation-play-state:paused] items-stretch gap-6 px-4">
           {marqueeItems.map((service, idx) => (
             <div 
@@ -76,6 +68,15 @@ export const SolutionSection: React.FC = () => {
             </div>
           ))}
         </div>
+      </div>
+
+      <div className="container mx-auto px-4 relative z-10 flex justify-center pb-4">
+         <button 
+             onClick={() => document.getElementById('chatbot-input')?.focus()}
+             className="text-white border border-white/30 px-8 py-4 rounded-full hover:bg-white hover:text-primary-900 transition-all font-bold flex items-center gap-3 group bg-white/5 backdrop-blur-sm"
+          >
+            Melyik való nekem? <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+          </button>
       </div>
     </section>
   );

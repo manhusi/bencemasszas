@@ -7,6 +7,8 @@ export interface Testimonial {
   type: string;
   content: string;
   source: string | null;
+  date?: string;
+  avatar?: string;
 }
 
 export interface ContactDetails {
