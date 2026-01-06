@@ -13,11 +13,33 @@ const STATIC_IMAGES: Record<string, string> = {
 export const SolutionSection: React.FC = () => {
   const marqueeItems = [...LANDING_DATA.service_categories, ...LANDING_DATA.service_categories];
 
-  const scrollToChatbot = () => {
-    const chatInput = document.getElementById('chatbot-input');
+  const askAboutService = (serviceName: string) => {
+    const chatInput = document.getElementById('chatbot-input') as HTMLInputElement;
     if (chatInput) {
       chatInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      setTimeout(() => chatInput.focus(), 500);
+      setTimeout(() => {
+        // Set the value
+        const message = `Mire jó a ${serviceName}?`;
+
+        // Trigger React's onChange by dispatching native input event
+        const nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value')?.set;
+        nativeInputValueSetter?.call(chatInput, message);
+
+        const inputEvent = new Event('input', { bubbles: true });
+        chatInput.dispatchEvent(inputEvent);
+
+        // Trigger Enter keypress to send
+        setTimeout(() => {
+          const enterEvent = new KeyboardEvent('keydown', {
+            key: 'Enter',
+            code: 'Enter',
+            keyCode: 13,
+            which: 13,
+            bubbles: true
+          });
+          chatInput.dispatchEvent(enterEvent);
+        }, 100);
+      }, 600);
     }
   };
 
@@ -44,7 +66,7 @@ export const SolutionSection: React.FC = () => {
           {marqueeItems.map((service, idx) => (
             <div
               key={`${service.category_name}-${idx}`}
-              onClick={scrollToChatbot}
+              onClick={() => askAboutService(service.category_name)}
               className="w-[300px] md:w-[380px] flex flex-col bg-white/5 backdrop-blur-md rounded-2xl border border-gold-400/20 transition-all duration-300 group overflow-hidden hover:bg-white/10 hover:shadow-2xl hover:shadow-gold-400/10 hover:-translate-y-2 cursor-pointer"
             >
               <div className="h-48 w-full relative overflow-hidden shrink-0">

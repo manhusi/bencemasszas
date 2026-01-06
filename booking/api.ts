@@ -1,5 +1,10 @@
 import { AvailabilityResponse, BookingRequest } from './types';
 
+// Bence Masszázs API configuration
+const BASE_URL = 'https://jdwhmvruzbvkzgfdousz.supabase.co/functions/v1';
+const PUBLIC_API_KEY = 'GBovqxbk7IQM7eXWUXpDrHGzxMvp3Qmy3uONcG5Hu26fJReh';
+const BOOKING_API_KEY = 'HhV30RbW6GvqdsWHkrvPnD2BcBbjEA9OJCMHrB6ebHNovJMR';
+
 export class BookingApiError extends Error {
     constructor(
         message: string,
@@ -11,14 +16,11 @@ export class BookingApiError extends Error {
     }
 }
 
-export async function fetchAvailability(
-    baseUrl: string,
-    apiKey: string
-): Promise<AvailabilityResponse> {
-    const response = await fetch(`${baseUrl}/get-availability`, {
+export async function fetchAvailability(): Promise<AvailabilityResponse> {
+    const response = await fetch(`${BASE_URL}/get-availability`, {
         method: 'GET',
         headers: {
-            'Authorization': `Bearer ${apiKey}`,
+            'Authorization': `Bearer ${PUBLIC_API_KEY}`,
             'Content-Type': 'application/json',
         },
     });
@@ -33,15 +35,11 @@ export async function fetchAvailability(
     return response.json();
 }
 
-export async function createBooking(
-    baseUrl: string,
-    apiKey: string,
-    data: BookingRequest
-): Promise<void> {
-    const response = await fetch(`${baseUrl}/create-booking`, {
+export async function createBooking(data: BookingRequest): Promise<void> {
+    const response = await fetch(`${BASE_URL}/create-booking`, {
         method: 'POST',
         headers: {
-            'Authorization': `Bearer ${apiKey}`,
+            'Authorization': `Bearer ${BOOKING_API_KEY}`,
             'Content-Type': 'application/json',
         },
         body: JSON.stringify(data),

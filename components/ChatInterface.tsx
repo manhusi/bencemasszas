@@ -179,7 +179,7 @@ export const ChatInterface: React.FC = () => {
   };
 
   const handleBookingClick = () => {
-    window.open('https://bencemasszazsnyiregyhaza.booked4.us/public/book', '_blank');
+    window.location.href = '/foglalas';
   };
 
   const restartChat = () => {
@@ -273,7 +273,7 @@ export const ChatInterface: React.FC = () => {
                     Időpontfoglalás
                   </button>
                   <p className="text-center text-xs text-gray-500 mt-3">
-                    Online foglalás a booked4.us rendszeren
+                    Online foglalás itt az oldalon
                   </p>
                 </div>
               </div>

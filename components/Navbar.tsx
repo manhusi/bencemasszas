@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Phone } from 'lucide-react';
+import { Phone, CalendarCheck } from 'lucide-react';
 import { LANDING_DATA } from '../constants';
 
 export const Navbar: React.FC = () => {
@@ -34,15 +34,14 @@ export const Navbar: React.FC = () => {
         {/* Contact CTA - No Navigation Links */}
         <div className="flex items-center gap-4">
           <a
-            href={`tel:${LANDING_DATA.contact_details.phone_number.replace(/\s/g, '')}`}
+            href="/foglalas"
             className={`group flex items-center gap-2 px-5 py-2.5 rounded-full font-bold text-sm transition-all duration-300 shadow-lg ${scrolled
               ? 'bg-gold-400 text-black hover:bg-gold-500 shadow-gold-400/30'
               : 'bg-gold-400/90 text-black hover:bg-gold-400 shadow-gold-400/20'
               }`}
           >
-            <Phone size={18} className="transition-transform group-hover:rotate-12" />
-            <span className="hidden md:inline">{LANDING_DATA.contact_details.phone_number}</span>
-            <span className="md:hidden">Hívás</span>
+            <CalendarCheck size={18} className="transition-transform group-hover:scale-110" />
+            <span>Időpontfoglalás</span>
           </a>
         </div>
       </div>

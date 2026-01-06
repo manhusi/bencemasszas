@@ -49,6 +49,13 @@ export const Testimonials: React.FC = () => {
     <section className="py-24 bg-gradient-to-b from-gray-900 via-gray-950 to-black overflow-hidden">
       <div className="container mx-auto px-4 relative">
 
+        {/* Section Title */}
+        <div className="flex flex-col items-center mb-12">
+          <h2 className="text-3xl md:text-5xl font-bold font-heading text-white mb-4 text-center">
+            Mit gondolnak rólunk?
+          </h2>
+        </div>
+
         {/* Google Reviews Header - Trust Building */}
         <div className="flex flex-col items-center mb-16">
           {/* Google Logo */}
@@ -66,7 +73,7 @@ export const Testimonials: React.FC = () => {
                     <Star key={s} size={24} fill="currentColor" strokeWidth={0} />
                   ))}
                 </div>
-                <span className="text-gray-400 text-sm">{testimonials.length} értékelés</span>
+                <span className="text-gray-400 text-sm">{testimonials.length} vélemény megjelenítve</span>
               </div>
             </div>
           </div>
@@ -122,6 +129,12 @@ export const Testimonials: React.FC = () => {
               </div>
             ))}
           </div>
+        </div>
+
+        {/* More reviews indicator */}
+        <div className="text-center mt-10">
+          <span className="text-gold-400 text-xl font-bold">+260 vélemény</span>
+          <span className="text-gray-500 ml-2">a Google-ön</span>
         </div>
 
       </div>

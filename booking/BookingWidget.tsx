@@ -8,12 +8,6 @@ import {
     BookingResult,
 } from './types';
 
-interface BookingWidgetProps {
-    baseUrl: string;
-    publicApiKey: string;
-    bookingApiKey: string;
-}
-
 const WEEKDAYS = ['H', 'K', 'Sze', 'Cs', 'P', 'Szo', 'V'];
 const MONTHS = [
     'Január', 'Február', 'Március', 'Április', 'Május', 'Június',
@@ -28,7 +22,7 @@ function formatDate(dateStr: string): string {
     return `${year}. ${month} ${day}.`;
 }
 
-export function BookingWidget({ baseUrl, publicApiKey, bookingApiKey }: BookingWidgetProps) {
+export function BookingWidget() {
     const [step, setStep] = useState<BookingStep>('date');
     const [availability, setAvailability] = useState<AvailabilityResponse | null>(null);
     const [loading, setLoading] = useState(true);
@@ -55,7 +49,7 @@ export function BookingWidget({ baseUrl, publicApiKey, bookingApiKey }: BookingW
             try {
                 setLoading(true);
                 setError(null);
-                const data = await fetchAvailability(baseUrl, publicApiKey);
+                const data = await fetchAvailability();
                 setAvailability(data);
 
                 // Auto-select service if only one
@@ -70,7 +64,7 @@ export function BookingWidget({ baseUrl, publicApiKey, bookingApiKey }: BookingW
         };
 
         loadAvailability();
-    }, [baseUrl, publicApiKey]);
+    }, []);
 
     // Get available dates
     const availableDates = useMemo(() => {
@@ -153,7 +147,7 @@ export function BookingWidget({ baseUrl, publicApiKey, bookingApiKey }: BookingW
             setSubmitting(true);
             setError(null);
 
-            await createBooking(baseUrl, bookingApiKey, {
+            await createBooking({
                 name: formData.name,
                 datetime: selectedSlot.datetime,
                 service: selectedService,
@@ -191,7 +185,7 @@ export function BookingWidget({ baseUrl, publicApiKey, bookingApiKey }: BookingW
         setError(null);
 
         // Reload availability
-        fetchAvailability(baseUrl, publicApiKey)
+        fetchAvailability()
             .then((data) => {
                 setAvailability(data);
                 if (data.service_id.length === 1) {
@@ -257,10 +251,10 @@ export function BookingWidget({ baseUrl, publicApiKey, bookingApiKey }: BookingW
                                 <div
                                     key={i}
                                     className={`booking-widget__step-dot ${i === stepIndex[step]
-                                            ? 'booking-widget__step-dot--active'
-                                            : i < stepIndex[step]
-                                                ? 'booking-widget__step-dot--completed'
-                                                : ''
+                                        ? 'booking-widget__step-dot--active'
+                                        : i < stepIndex[step]
+                                            ? 'booking-widget__step-dot--completed'
+                                            : ''
                                         }`}
                                 />
                             ))}
@@ -404,8 +398,8 @@ export function BookingWidget({ baseUrl, publicApiKey, bookingApiKey }: BookingW
                                             key={slot.datetime}
                                             type="button"
                                             className={`booking-widget__slot ${selectedSlot?.datetime === slot.datetime
-                                                    ? 'booking-widget__slot--selected'
-                                                    : ''
+                                                ? 'booking-widget__slot--selected'
+                                                : ''
                                                 }`}
                                             onClick={() => handleSlotSelect(slot)}
                                         >

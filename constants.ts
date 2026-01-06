@@ -111,56 +111,80 @@ export const LANDING_DATA: LandingData = {
     { "value": "Képzett, tapasztalt masszőr" },
     { "value": "6+ különböző masszázstípus" },
     { "value": "Nyugodt, kellemes környezet" },
-    { "value": "Budapest szívében, könnyen megközelíthető" },
+    { "value": "Nyíregyháza központjában, könnyen megközelíthető" },
     { "value": "Rugalmas időpontfoglalás" },
     { "value": "Személyre szabott kezelések" }
   ],
   "pricing_structures": [],
   "contact_details": {
-    "phone_number": "06 30 558 9457",
-    "address": "Budapest, Hegedűs Gyula u. 90, 1133",
+    "phone_number": "",
+    "address": "4400 Nyíregyháza, Szent István utca 2.",
     "email_address": "",
     "opening_hours": "Hétfőtől szombatig, előzetes bejelentkezéssel"
   },
   "trust_signals": [
     {
       "type": "testimonial",
-      "content": "Nagyon profi és kedves! Ritka az ilyen odafigyeléssel dolgozó szakember.",
-      "source": "Dominika Fodor",
+      "content": "Sziasztok\nLe a kalappal Bence előtt 🙏🙏\nÜgyes, tapasztalt, erőskezű masszőr.",
+      "source": "Attila Sebők",
+      "reviewCount": "6 vélemény · 6 fotó",
+      "date": "egy éve",
+      "avatar": ""
+    },
+    {
+      "type": "testimonial",
+      "content": "Kiváló, alapos masszőr, aki nem csak a levegőbe beszél. Derék és hát fájásomat már két alkalom alatt rendbe hozta, a merev izmaimat fellazította. Csak ajánlani tudom!",
+      "source": "Zsuzsanna Izsák",
+      "reviewCount": "1 vélemény",
+      "date": "11 hónapja",
+      "avatar": ""
+    },
+    {
+      "type": "testimonial",
+      "content": "Köszönöm szépen a segítséget, a köpölyözést. Végtelenül kedves, hozzáértő fiatalember személyében tiszta környezetben várja a hát-, váll-, derékfájó embereket. Szívből ajánlom ❤️",
+      "source": "Anita Rátonyiné Kovács",
+      "reviewCount": "1 vélemény",
+      "date": "7 hónapja",
+      "avatar": ""
+    },
+    {
+      "type": "testimonial",
+      "content": "Maximális elégedettség és teljesen korrekt, rugalmas a hozzá állása, bárcsak mindenki ilyen lenne! Egy erős masszázst kértem Bencétől úgy érzem sikerült is. Sportolásból adódó izom letapadásokat lazán felmasszirozta. Köszönöm szépen, biztosan megyek még 💪👌👑",
+      "source": "Tibor Rodák",
       "reviewCount": "2 vélemény",
-      "date": "egy éve",
+      "date": "8 hónapja",
       "avatar": ""
     },
     {
       "type": "testimonial",
-      "content": "Csak ajánlani tudom Bencét! Ügyes, lelkes, a vendégeire maximálisan odafigyelő masszőr! Visszatérő vendég leszek ☺️",
-      "source": "Jozsef Angyal",
-      "reviewCount": "6 vélemény · 1 fotó",
-      "date": "2 éve",
+      "content": "Első alkalommal jártam Bencénél és nagyon meg vagyok elégedve a munkájával csak ajánlani tudom !!\nTiszta szép rendezett környezett vissza térő vendég leszek\nKöszönöm szépen Bence innen is a sok sok segítséget !!",
+      "source": "Róbert Kaló",
+      "reviewCount": "2 vélemény",
+      "date": "7 hónapja",
       "avatar": ""
     },
     {
       "type": "testimonial",
-      "content": "Első alkalom után a vártnál is jobb eredmény. Abszolút frissítő masszázs, kellemes hangulat. Csakis ajánlom Bencét 🙂",
-      "source": "Péter Dániel",
-      "reviewCount": "Helyi idegenvezető · 237 vélemény · 1686 fotó",
-      "date": "2 éve",
+      "content": "Először jártam Bencénél! Elég rég voltam már masszázson, de az első alkalmon volt is mit dolgoznia! Csípő, derék, hát, váll és nyak volt a célpont! Következő alkalommal már célkeresztbe kerülnek a lábak is. Jó élményekkel és felfrissülve távoztam tőle! Csak ajánlani tudom mindenkinek! Foglaljatok időpontot nem bánjátok meg! 😉",
+      "source": "Tibor",
+      "reviewCount": "Helyi idegenvezető · 19 vélemény · 139 fotó",
+      "date": "9 hónapja",
       "avatar": ""
     },
     {
       "type": "testimonial",
-      "content": "Bence nagyon jó masszőr. Kellemes környezet, kellemes hangulat, kellemes és hozzáértő masszázs élmény. Csak ajánlani tudom. Ne menj máshoz! Bence a legjobb!",
-      "source": "Attila Szitas",
-      "reviewCount": "4 vélemény",
-      "date": "egy éve",
+      "content": "Végre egy jó kezű masszőr! Nagyon figyelmes, ügyes. Lazító masszázson jártam nála, szinte éreztem ahogy a terhek dobódnak le rólam! Ajánlom mindenkinek! 🙂",
+      "source": "Norbert Kánisz",
+      "reviewCount": "1 vélemény",
+      "date": "2 hónapja",
       "avatar": ""
     },
     {
       "type": "testimonial",
-      "content": "Ügyes, kemény kezű masszőr",
-      "source": "György Kreisz",
-      "reviewCount": "Helyi idegenvezető · 148 vélemény · 37 fotó",
-      "date": "4 hónapja",
+      "content": "Erős hátfájdalom miatt kerestem fel Bencét. Először jártam nála, de maximálisan elégedett vagyok. Sokkal könnyebb a mozgásom, jobb a közérzetem. A szalon igényes, jó hangulatú! Külön köszönöm a frissítő vizet a végén! 🙂 Csak ajánlani tudom!",
+      "source": "Beus Pavlovics-Poór",
+      "reviewCount": "2 vélemény",
+      "date": "2 hónapja",
       "avatar": ""
     }
   ]
@@ -168,19 +192,23 @@ export const LANDING_DATA: LandingData = {
 
 export const FAQ_ITEMS = [
   {
-    question: "Mennyi ideig tart egy masszázs kezelés?",
-    answer: "A kezelések időtartama 20 perctől 90 percig terjed a választott masszázstípustól függően. A 30 perces kezelések egy adott testrészre, a 60-90 percesek teljes testre szólnak."
+    question: "Milyen ruházatban történik a masszázs?",
+    answer: "A masszázs fehérneműben történik. A kezelés során a test azon részeit, amelyeket éppen nem masszírozok, törölközővel betakarva tartom a melegérzet és a komfort érdekében."
   },
   {
-    question: "Hogyan tudok időpontot foglalni?",
-    answer: "Telefonon a 06 20 / 213-0094 számon, vagy az online foglalási rendszerünkön keresztül. Rugalmas időpontokat kínálunk hétfőtől szombatig."
+    question: "Fájni fog a masszázs?",
+    answer: "A cél a feszültségoldás, ami a letapadt izmoknál járhat némi 'jóleső' fájdalommal, de sosem lehet elviselhetetlen. Folyamatosan kommunikálunk, az erősséget mindig az egyéni fájdalomküszöbödhoz igazítom."
   },
   {
-    question: "Milyen masszázst ajánlotok első alkalommal?",
-    answer: "Első alkalommal a Svéd vagy Relax masszázst javasoljuk 60 perces időtartamban, amely jó alapot ad a test megismerésére és a feszültség oldására."
+    question: "Mennyivel evés után érdemes érkezni?",
+    answer: "A masszázs előtt 1-1,5 órával már nem ajánlott nehéz ételeket fogyasztani, mert a teli has kellemetlen lehet fekvés közben és megterheli a szervezetet."
   },
   {
-    question: "Mire jó a köpölyözés?",
-    answer: "A köpölyözés fokozza a vérkeringést, segít a toxinok eltávolításában, oldja az izomfeszültséget. Különösen hatékony háti fájdalmak és sportolói regenerálódás esetén."
+    question: "Mit tegyek, ha le kell mondanom az időpontot?",
+    answer: "Az élet néha közbeszól. Kérlek, ha nem tudsz eljönni, legalább 24 órával az időpont előtt jelezd telefonon vagy üzenetben, hogy másnak tudjam adni a helyet."
+  },
+  {
+    question: "Mikor NEM javasolt a masszázs?",
+    answer: "Lázas állapotban, fertőző betegség alatt, friss sérülések (törés, szakadás) esetén, vagy gyulladt visszérnél a masszázs ellenjavallt. Ha bizonytalan vagy, konzultáljunk telefonon!"
   }
 ];

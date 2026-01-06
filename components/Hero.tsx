@@ -1,6 +1,6 @@
 import React from 'react';
 import { ChatInterface } from './ChatInterface';
-import { CheckCircle2, ArrowRight, Star } from 'lucide-react';
+import { CheckCircle2, ArrowRight, Star, MapPin } from 'lucide-react';
 
 export const Hero: React.FC = () => {
   return (
@@ -47,18 +47,16 @@ export const Hero: React.FC = () => {
             </h1>
 
             <p className="text-lg md:text-xl text-gray-400 font-body leading-relaxed">
-              5 csillagos masszázs élmény Budapest szívében. <br className="hidden md:block" />
+              5 csillagos masszázs élmény Nyíregyháza szívében. <br className="hidden md:block" />
               <strong className="text-gold-400">Bence</strong> – képzett masszőr, akire bátran ráhagyatkozhatsz.
             </p>
 
-            {/* Feature List */}
+            {/* Address instead of Features */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start pt-2">
-              {['Képzett masszőr', '6+ masszázstípus', 'Központi helyszín'].map((item, i) => (
-                <div key={i} className="flex items-center gap-2 text-gray-400 text-sm font-medium">
-                  <CheckCircle2 className="text-gold-400 shrink-0" size={18} />
-                  <span>{item}</span>
-                </div>
-              ))}
+              <div className="flex items-center gap-3 text-gold-400 bg-gold-400/10 px-6 py-3 rounded-2xl border border-gold-400/20 shadow-lg shadow-gold-400/5">
+                <MapPin className="shrink-0" size={24} />
+                <span className="text-lg font-bold tracking-wide">4400 Nyíregyháza, Szent István utca 2.</span>
+              </div>
             </div>
 
             {/* CTA Buttons */}
@@ -71,10 +69,8 @@ export const Hero: React.FC = () => {
                 <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
               </button>
               <a
-                href="https://bencemasszazsnyiregyhaza.booked4.us/public/book"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bg-transparent border-2 border-gold-400/50 text-gold-400 px-8 py-4 rounded-2xl font-bold font-heading hover:bg-gold-400/10 hover:border-gold-400 transition-all transform flex items-center justify-center gap-3"
+                href="/foglalas"
+                className="group flex items-center justify-center gap-3 bg-gold-400 text-black px-8 py-4 rounded-full font-bold text-lg hover:bg-gold-500 transition-all duration-300 shadow-lg shadow-gold-400/30 hover:shadow-gold-400/50 hover:-translate-y-0.5"
               >
                 Időpontfoglalás
               </a>

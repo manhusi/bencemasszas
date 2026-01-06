@@ -16,12 +16,10 @@ export const Footer: React.FC = () => {
               Bence<span className="text-gold-400">Masszázs</span>
             </h3>
             <p className="text-gray-400 max-w-md leading-relaxed mb-6">
-              Professzionális masszázs szolgáltatások Budapest szívében. Svéd, relax, aromaterápiás masszázs és speciális kezelések a tested és lelked harmóniájáért.
+              Professzionális masszázs szolgáltatások Nyíregyháza központjában. Svéd, relax, aromaterápiás masszázs és speciális kezelések a tested és lelked harmóniájáért.
             </p>
             <a
-              href="https://bencemasszazsnyiregyhaza.booked4.us/public/book"
-              target="_blank"
-              rel="noopener noreferrer"
+              href="/foglalas"
               className="inline-flex items-center gap-2 bg-gold-400 text-black px-6 py-3 rounded-full font-bold hover:bg-gold-500 transition-colors"
             >
               Online időpontfoglalás
@@ -36,10 +34,6 @@ export const Footer: React.FC = () => {
               <li className="flex items-start gap-3 text-gray-400 hover:text-gold-400 transition-colors">
                 <MapPin size={20} className="shrink-0 mt-1 text-gold-400" />
                 <span>{contact_details.address}</span>
-              </li>
-              <li className="flex items-center gap-3 text-gray-400 hover:text-gold-400 transition-colors">
-                <Phone size={20} className="shrink-0 text-gold-400" />
-                <a href={`tel:${contact_details.phone_number.replace(/\s/g, '')}`}>{contact_details.phone_number}</a>
               </li>
             </ul>
           </div>
