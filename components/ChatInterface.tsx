@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Send, Bot, Sparkles, RefreshCw, CalendarCheck, ArrowRightCircle } from 'lucide-react';
 import { GoogleGenAI, FunctionDeclaration, Type } from "@google/genai";
 import { FULL_SERVICES_DATA } from '../constants';
@@ -28,11 +29,12 @@ const recommendServiceFunction: FunctionDeclaration = {
 const DEFAULT_SUGGESTIONS = ['Arcfiatalítás & Ráncok', 'Bőrproblémák (Akne/Folt)', 'Testkezelés & Alakformálás', 'Nem tudom, tanácsot kérek'];
 
 export const ChatInterface: React.FC = () => {
+  const navigate = useNavigate();
   const [messages, setMessages] = useState<{ id: number; sender: 'bot' | 'user'; text?: string; isRecommendation?: boolean; serviceData?: any }[]>([
-    { 
-      id: 1, 
-      sender: 'bot', 
-      text: 'Üdvözlöm! Dr. Kondorosi Ildikó virtuális asszisztense vagyok. Segítek eligazodni kezeléseink között és megtalálni a tökéletes megoldást az Ön számára. Mi az a probléma, ami leginkább zavarja mostanában?' 
+    {
+      id: 1,
+      sender: 'bot',
+      text: 'Üdvözlöm! Dr. Kondorosi Ildikó virtuális asszisztense vagyok. Segítek eligazodni kezeléseink között és megtalálni a tökéletes megoldást az Ön számára. Mi az a probléma, ami leginkább zavarja mostanában?'
     },
   ]);
 
@@ -40,7 +42,7 @@ export const ChatInterface: React.FC = () => {
   const [isTyping, setIsTyping] = useState(false);
   const [chatSession, setChatSession] = useState<any>(null);
   const [currentSuggestions, setCurrentSuggestions] = useState<string[]>(DEFAULT_SUGGESTIONS);
-  
+
   // Use a ref for the container instead of a bottom element to prevent page jumping
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
@@ -66,7 +68,7 @@ export const ChatInterface: React.FC = () => {
   const parseResponse = (text: string) => {
     const optionsRegex = /\[OPTIONS: (.*?)\]/;
     const match = text.match(optionsRegex);
-    
+
     let cleanText = text;
     let newSuggestions = [];
 
@@ -75,7 +77,7 @@ export const ChatInterface: React.FC = () => {
       newSuggestions = match[1].split('|').map(s => s.trim());
       // Remove the options tag from the display text
       cleanText = text.replace(match[0], '').trim();
-    } 
+    }
 
     return { cleanText, newSuggestions };
   };
@@ -122,7 +124,7 @@ export const ChatInterface: React.FC = () => {
   const handleSend = async (overrideText?: string) => {
     const textToSend = overrideText || inputValue;
     if (!textToSend.trim() || !chatSession) return;
-    
+
     // Add user message
     const newMsg = { id: Date.now(), sender: 'user' as const, text: textToSend };
     setMessages(prev => [...prev, newMsg]);
@@ -136,21 +138,21 @@ export const ChatInterface: React.FC = () => {
 
       // Check for tool calls
       const functionCalls = response.functionCalls;
-      
+
       if (functionCalls && functionCalls.length > 0) {
         // Handle recommendation tool
         const call = functionCalls[0];
         if (call.name === 'recommendService') {
           const { serviceName, reasoning } = call.args as any;
-          
+
           // Add recommendation message UI
-          setMessages(prev => [...prev, { 
-            id: Date.now() + 1, 
-            sender: 'bot', 
+          setMessages(prev => [...prev, {
+            id: Date.now() + 1,
+            sender: 'bot',
             isRecommendation: true,
             serviceData: { name: serviceName, reason: reasoning }
           }]);
-          
+
           // After recommendation, offer to restart or book
           setCurrentSuggestions(['Időpontfoglalás', 'Másik probléma', 'Újrakezdés']);
         }
@@ -159,10 +161,10 @@ export const ChatInterface: React.FC = () => {
         const rawText = response.text;
         const { cleanText, newSuggestions } = parseResponse(rawText);
 
-        setMessages(prev => [...prev, { 
-          id: Date.now() + 1, 
-          sender: 'bot', 
-          text: cleanText 
+        setMessages(prev => [...prev, {
+          id: Date.now() + 1,
+          sender: 'bot',
+          text: cleanText
         }]);
 
         if (newSuggestions.length > 0) {
@@ -170,40 +172,40 @@ export const ChatInterface: React.FC = () => {
         } else {
           // Fallback if AI forgets options, keep generic ones or clear
           // But usually we want to keep conversation going
-          setCurrentSuggestions([]); 
+          setCurrentSuggestions([]);
         }
       }
 
     } catch (error) {
       console.error("Chat error:", error);
       setIsTyping(false);
-      setMessages(prev => [...prev, { 
-        id: Date.now() + 1, 
-        sender: 'bot', 
-        text: 'Elnézést, egy kis technikai hiba történt. Kérem próbálja újra később.' 
+      setMessages(prev => [...prev, {
+        id: Date.now() + 1,
+        sender: 'bot',
+        text: 'Elnézést, egy kis technikai hiba történt. Kérem próbálja újra később.'
       }]);
       setCurrentSuggestions(DEFAULT_SUGGESTIONS);
     }
   };
 
   const handleBookingClick = (serviceName: string) => {
-    console.log(`Booking initiated for: ${serviceName}`);
-    // Future implementation: Navigate to booking route
+    // Navigate to booking page
+    navigate('/foglalas');
   };
 
   const restartChat = () => {
-    setMessages([{ 
-      id: 1, 
-      sender: 'bot', 
-      text: 'Üdvözlöm! Dr. Kondorosi Ildikó virtuális asszisztense vagyok. Segítek eligazodni kezeléseink között és megtalálni a tökéletes megoldást az Ön számára. Mi az a probléma, ami leginkább zavarja mostanában?' 
+    setMessages([{
+      id: 1,
+      sender: 'bot',
+      text: 'Üdvözlöm! Dr. Kondorosi Ildikó virtuális asszisztense vagyok. Segítek eligazodni kezeléseink között és megtalálni a tökéletes megoldást az Ön számára. Mi az a probléma, ami leginkább zavarja mostanában?'
     }]);
     setIsTyping(false);
-    
+
     // Re-initialize chat session to clear history
     const chat = ai.chats.create({
-        model: 'gemini-3-flash-preview',
-        config: {
-          systemInstruction: `You are the virtual assistant for Dr. Kondorosi Ildikó at Dunakanyar Esztétika. 
+      model: 'gemini-3-flash-preview',
+      config: {
+        systemInstruction: `You are the virtual assistant for Dr. Kondorosi Ildikó at Dunakanyar Esztétika. 
           Your goal is to help users find the right aesthetic or dermatological service by asking 2-3 targeted diagnostic questions.
           Speak Hungarian. Be polite, professional, yet friendly. 
           Keep your responses concise (max 2-3 sentences).
@@ -223,11 +225,11 @@ export const ChatInterface: React.FC = () => {
           2. Based on their answer, ask clarifying questions. Provide [OPTIONS: ...]
           3. When identified, use 'recommendService'.
           `,
-          tools: [{ functionDeclarations: [recommendServiceFunction] }],
-        },
-      });
-      setChatSession(chat);
-      setCurrentSuggestions(DEFAULT_SUGGESTIONS);
+        tools: [{ functionDeclarations: [recommendServiceFunction] }],
+      },
+    });
+    setChatSession(chat);
+    setCurrentSuggestions(DEFAULT_SUGGESTIONS);
   };
 
   return (
@@ -249,7 +251,7 @@ export const ChatInterface: React.FC = () => {
             </div>
           </div>
         </div>
-        <button 
+        <button
           onClick={restartChat}
           className="p-2 text-gray-400 hover:text-primary-600 hover:bg-primary-50 rounded-full transition-colors"
           title="Beszélgetés újrakezdése"
@@ -259,7 +261,7 @@ export const ChatInterface: React.FC = () => {
       </div>
 
       {/* Messages Area */}
-      <div 
+      <div
         ref={scrollContainerRef}
         className="flex-1 overflow-y-auto p-4 space-y-4 bg-gradient-to-b from-gray-50/50 to-white scrollbar-thin scrollbar-thumb-gray-200"
       >
@@ -270,35 +272,34 @@ export const ChatInterface: React.FC = () => {
           >
             {msg.isRecommendation ? (
               <div className="w-full max-w-[95%]">
-                 <div className="bg-gradient-to-br from-white to-secondary-50 border border-secondary-100 rounded-2xl p-5 shadow-lg shadow-secondary-100/50">
-                    <div className="flex items-center gap-2 mb-3 text-secondary-600 font-bold uppercase text-xs tracking-wider">
-                      <Sparkles size={14} /> Ajánlott kezelés
-                    </div>
-                    <h4 className="text-xl font-heading font-bold text-gray-900 mb-2">
-                      {msg.serviceData.name}
-                    </h4>
-                    <p className="text-gray-600 text-sm mb-6 leading-relaxed">
-                      {msg.serviceData.reason}
-                    </p>
-                    <button 
-                      onClick={() => handleBookingClick(msg.serviceData.name)}
-                      className="w-full bg-primary-600 text-white py-3.5 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-primary-700 hover:shadow-lg hover:shadow-primary-600/20 transition-all transform hover:scale-[1.02]"
-                    >
-                      <CalendarCheck size={18} />
-                      Ingyenes konzultáció foglalása
-                    </button>
-                    <p className="text-center text-xs text-gray-400 mt-3">
-                      Az időpontfoglalás kötelezettségmentes.
-                    </p>
-                 </div>
+                <div className="bg-gradient-to-br from-white to-secondary-50 border border-secondary-100 rounded-2xl p-5 shadow-lg shadow-secondary-100/50">
+                  <div className="flex items-center gap-2 mb-3 text-secondary-600 font-bold uppercase text-xs tracking-wider">
+                    <Sparkles size={14} /> Ajánlott kezelés
+                  </div>
+                  <h4 className="text-xl font-heading font-bold text-gray-900 mb-2">
+                    {msg.serviceData.name}
+                  </h4>
+                  <p className="text-gray-600 text-sm mb-6 leading-relaxed">
+                    {msg.serviceData.reason}
+                  </p>
+                  <button
+                    onClick={() => handleBookingClick(msg.serviceData.name)}
+                    className="w-full bg-primary-600 text-white py-3.5 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-primary-700 hover:shadow-lg hover:shadow-primary-600/20 transition-all transform hover:scale-[1.02]"
+                  >
+                    <CalendarCheck size={18} />
+                    Ingyenes konzultáció foglalása
+                  </button>
+                  <p className="text-center text-xs text-gray-400 mt-3">
+                    Az időpontfoglalás kötelezettségmentes.
+                  </p>
+                </div>
               </div>
             ) : (
               <div
-                className={`max-w-[85%] p-4 rounded-2xl text-[15px] leading-relaxed shadow-sm ${
-                  msg.sender === 'user'
+                className={`max-w-[85%] p-4 rounded-2xl text-[15px] leading-relaxed shadow-sm ${msg.sender === 'user'
                     ? 'bg-primary-600 text-white rounded-br-none'
                     : 'bg-white text-gray-800 border border-gray-100 rounded-bl-none shadow-gray-200/50'
-                }`}
+                  }`}
               >
                 {msg.text}
               </div>
@@ -308,8 +309,8 @@ export const ChatInterface: React.FC = () => {
 
         {isTyping && (
           <div className="flex justify-start w-full animate-fade-in">
-             <div className="flex items-center gap-2 bg-white border border-gray-100 px-4 py-3 rounded-2xl rounded-bl-none shadow-sm">
-               <span className="text-xs text-gray-400 font-medium mr-1">Gondolkodik...</span>
+            <div className="flex items-center gap-2 bg-white border border-gray-100 px-4 py-3 rounded-2xl rounded-bl-none shadow-sm">
+              <span className="text-xs text-gray-400 font-medium mr-1">Gondolkodik...</span>
               <div className="flex gap-1">
                 <span className="w-1.5 h-1.5 bg-primary-400 rounded-full animate-bounce"></span>
                 <span className="w-1.5 h-1.5 bg-primary-400 rounded-full animate-bounce delay-75"></span>
@@ -325,13 +326,13 @@ export const ChatInterface: React.FC = () => {
         <div className="px-4 pb-2 bg-white border-t border-gray-50 pt-2 shrink-0">
           <div className="grid grid-cols-2 gap-2">
             {currentSuggestions.map((chip, idx) => (
-               <button 
-                 key={`${chip}-${idx}`}
-                 onClick={() => handleSend(chip)}
-                 className="text-center whitespace-normal text-xs font-bold bg-white text-gray-700 px-2 py-2 rounded-lg border border-gray-200 hover:border-primary-400 hover:bg-primary-50 hover:text-primary-700 transition-all shadow-sm active:scale-95 flex items-center justify-center gap-1 group min-h-[40px]"
-               >
-                 {chip}
-               </button>
+              <button
+                key={`${chip}-${idx}`}
+                onClick={() => handleSend(chip)}
+                className="text-center whitespace-normal text-xs font-bold bg-white text-gray-700 px-2 py-2 rounded-lg border border-gray-200 hover:border-primary-400 hover:bg-primary-50 hover:text-primary-700 transition-all shadow-sm active:scale-95 flex items-center justify-center gap-1 group min-h-[40px]"
+              >
+                {chip}
+              </button>
             ))}
           </div>
         </div>
@@ -349,7 +350,7 @@ export const ChatInterface: React.FC = () => {
             onChange={(e) => setInputValue(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && handleSend()}
           />
-          <button 
+          <button
             onClick={() => handleSend()}
             disabled={!inputValue.trim()}
             className="absolute right-2 p-1.5 bg-primary-600 text-white rounded-lg hover:bg-primary-700 disabled:opacity-50 disabled:hover:bg-primary-600 transition-all shadow-md hover:shadow-lg"
