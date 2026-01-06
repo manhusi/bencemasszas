@@ -9,6 +9,7 @@ export interface Testimonial {
   source: string | null;
   date?: string;
   avatar?: string;
+  reviewCount?: string;
 }
 
 export interface ContactDetails {

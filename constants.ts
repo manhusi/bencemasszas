@@ -125,24 +125,43 @@ export const LANDING_DATA: LandingData = {
   "trust_signals": [
     {
       "type": "testimonial",
-      "content": "Fantasztikus masszázs! Bence profi munkát végez, azonnal éreztem a feszültség oldódását. Csak ajánlani tudom mindenkinek!",
-      "source": "Elégedett vendég",
-      "date": "2024",
-      "avatar": "https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=200&auto=format&fit=crop"
+      "content": "Nagyon profi és kedves! Ritka az ilyen odafigyeléssel dolgozó szakember.",
+      "source": "Dominika Fodor",
+      "reviewCount": "2 vélemény",
+      "date": "egy éve",
+      "avatar": ""
     },
     {
       "type": "testimonial",
-      "content": "Régóta kerestem jó masszőrt Nyíregyházán. Bence szalonja a legjobb választás volt – nyugodt környezet, profi kiszolgálás.",
-      "source": "Visszatérő vendég",
-      "date": "2024",
-      "avatar": "https://images.unsplash.com/photo-1595152452543-e5fc28ebc2b8?q=80&w=200&auto=format&fit=crop"
+      "content": "Csak ajánlani tudom Bencét! Ügyes, lelkes, a vendégeire maximálisan odafigyelő masszőr! Visszatérő vendég leszek ☺️",
+      "source": "Jozsef Angyal",
+      "reviewCount": "6 vélemény · 1 fotó",
+      "date": "2 éve",
+      "avatar": ""
     },
     {
       "type": "testimonial",
-      "content": "A svéd masszázs után teljesen felfrissültem. Köszönöm a gondos munkát!",
-      "source": "Új vendég",
-      "date": "2024",
-      "avatar": "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=200&auto=format&fit=crop"
+      "content": "Első alkalom után a vártnál is jobb eredmény. Abszolút frissítő masszázs, kellemes hangulat. Csakis ajánlom Bencét 🙂",
+      "source": "Péter Dániel",
+      "reviewCount": "Helyi idegenvezető · 237 vélemény · 1686 fotó",
+      "date": "2 éve",
+      "avatar": ""
+    },
+    {
+      "type": "testimonial",
+      "content": "Bence nagyon jó masszőr. Kellemes környezet, kellemes hangulat, kellemes és hozzáértő masszázs élmény. Csak ajánlani tudom. Ne menj máshoz! Bence a legjobb!",
+      "source": "Attila Szitas",
+      "reviewCount": "4 vélemény",
+      "date": "egy éve",
+      "avatar": ""
+    },
+    {
+      "type": "testimonial",
+      "content": "Ügyes, kemény kezű masszőr",
+      "source": "György Kreisz",
+      "reviewCount": "Helyi idegenvezető · 148 vélemény · 37 fotó",
+      "date": "4 hónapja",
+      "avatar": ""
     }
   ]
 };

@@ -21,29 +21,34 @@ export const Hero: React.FC = () => {
           {/* Text Content */}
           <div className="flex-1 text-center lg:text-left space-y-8 max-w-2xl mx-auto lg:mx-0">
 
-            {/* Trust Badge */}
+            {/* Trust Badge - Google Rating */}
             <div className="inline-flex items-center gap-3 px-5 py-2.5 bg-white/5 backdrop-blur-md rounded-full shadow-lg border border-gold-400/20 mx-auto lg:mx-0 animate-fade-in-up group hover:scale-[1.02] transition-transform cursor-default">
-              <div className="flex gap-0.5 text-gold-400">
+              <div className="flex gap-0.5 text-[#FBBC05]">
                 {[1, 2, 3, 4, 5].map((star) => (
                   <Star key={star} size={16} fill="currentColor" strokeWidth={0} />
                 ))}
               </div>
-              <div className="h-4 w-px bg-gold-400/30"></div>
-              <span className="text-xs font-bold text-gold-400 tracking-wide uppercase">
-                Budapest
-              </span>
+              <div className="h-4 w-px bg-white/20"></div>
+              <div className="flex text-lg font-bold tracking-tighter">
+                <span className="text-[#4285F4]">G</span>
+                <span className="text-[#EA4335]">o</span>
+                <span className="text-[#FBBC05]">o</span>
+                <span className="text-[#4285F4]">g</span>
+                <span className="text-[#34A853]">l</span>
+                <span className="text-[#EA4335]">e</span>
+              </div>
             </div>
 
             <h1 className="text-4xl md:text-5xl lg:text-7xl font-extrabold font-heading text-white leading-[1.1] tracking-tight">
-              Érezd jól magad <br />
+              Lazíts. <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-gold-300 via-gold-400 to-gold-500">
-                a testedben
+                Töltődj fel.
               </span>
             </h1>
 
             <p className="text-lg md:text-xl text-gray-400 font-body leading-relaxed">
-              Professzionális masszázs Budapesten. <br className="hidden md:block" />
-              <strong className="text-gold-400">Válaszd ki a számodra ideális kezelést</strong> – segítünk megtalálni!
+              5 csillagos masszázs élmény Budapest szívében. <br className="hidden md:block" />
+              <strong className="text-gold-400">Bence</strong> – képzett masszőr, akire bátran ráhagyatkozhatsz.
             </p>
 
             {/* Feature List */}
