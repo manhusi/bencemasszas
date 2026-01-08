@@ -45,8 +45,8 @@ export const handler = async (event) => {
             };
         }
 
-        // Default to gemini-1.5-flash
-        const model = "gemini-1.5-flash";
+        // Fallback to gemini-pro if 1.5-flash is not available for this key
+        const model = "gemini-pro";
 
         console.log(`Forwarding request to Gemini (${model})...`);
 
