@@ -83,28 +83,42 @@ export function BookingWidget({ initialService }: BookingWidgetProps) {
     }, [initialService]); // Add initialService to dependency array
 
     // Get all available services
-    const allServices = useMemo(() => {
+    const availableServices = useMemo(() => {
         if (!availability) return [];
-        const servicesFromSlots = availability.slots.flatMap(s => s.available_services || []);
-        if (servicesFromSlots.length > 0) {
-            return [...new Set(servicesFromSlots)];
+        // Prefer the detailed 'services' array if available
+        if (availability.services && availability.services.length > 0) {
+            return availability.services;
         }
-        return availability.service_id || [];
+        // Fallback for backward compatibility (though 'services' should exist now)
+        return [];
     }, [availability]);
+
+    // Backward compatibility for slot filtering (slots might still use names)
+    // We need to map selected service ID back to name if slots rely on names
+    const selectedServiceName = useMemo(() => {
+        if (!selectedService) return null;
+        if (!availability?.services) return selectedService; // Fallback if no services array
+        const service = availability.services.find(s => s.id === selectedService);
+        return service ? service.name : selectedService;
+    }, [selectedService, availability]);
+
 
     // Get slots filtered by selected service
     const slotsForService = useMemo(() => {
-        if (!availability || !selectedService) return [];
-        const hasAvailableServices = availability.slots.some(
-            s => s.available_services && s.available_services.length > 0
-        );
-        if (hasAvailableServices) {
-            return availability.slots.filter(
-                s => s.available_services && s.available_services.includes(selectedService)
-            );
-        }
-        return availability.slots;
-    }, [availability, selectedService]);
+        if (!availability || !selectedServiceName) return [];
+
+        // Check if slots use ID or Name (legacy slots usually assume Name based on prior API)
+        // The API contract says slots have 'available_services' string array.
+        // We assume these strings match 'service.name' or 'service.id'. 
+        // Let's try both matching strategies.
+
+        return availability.slots.filter(s => {
+            if (!s.available_services || s.available_services.length === 0) return true; // Available for all if undefined? Or none? Usually specific.
+            return s.available_services.includes(selectedServiceName) || s.available_services.includes(selectedService!);
+        });
+    }, [availability, selectedServiceName, selectedService]);
+
+    // ... (availableDates, slotsForDate, availableHours logic remains mostly same)
 
     // Get available dates for selected service
     const availableDates = useMemo(() => {
@@ -139,6 +153,41 @@ export function BookingWidget({ initialService }: BookingWidgetProps) {
         if (!selectedHour || !selectedMinute) return null;
         return slotsForHour.find(s => s.time === `${selectedHour}:${selectedMinute}`) || null;
     }, [slotsForHour, selectedHour, selectedMinute]);
+
+    // FETCH Availability
+    useEffect(() => {
+        const loadAvailability = async () => {
+            try {
+                setLoading(true);
+                setError(null);
+                const data = await fetchAvailability();
+                setAvailability(data);
+
+                // Auto-select logic
+                if (initialService) {
+                    // Check if initialService matches a name in the new services list, and get its ID
+                    const serviceObj = data.services?.find(s => s.name === initialService);
+                    if (serviceObj) {
+                        setSelectedService(serviceObj.id);
+                        setStep('date');
+                    } else {
+                        // Fallback or partial text match could go here
+                    }
+                } else if (data.services && data.services.length === 1) {
+                    setSelectedService(data.services[0].id);
+                    setStep('date');
+                }
+            } catch (err) {
+                setError(err instanceof Error ? err.message : 'Hiba történt');
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        loadAvailability();
+    }, [initialService]);
+
+    // ...
 
     // Calendar helpers
     const getDaysInMonth = (date: Date) => {
@@ -216,27 +265,36 @@ export function BookingWidget({ initialService }: BookingWidgetProps) {
         e.preventDefault();
         if (!selectedSlot || !selectedService) return;
 
+        const serviceObj = availability?.services?.find(s => s.id === selectedService);
+        if (!serviceObj) return;
+
         try {
             setSubmitting(true);
             setError(null);
 
-            await createBooking({
+            const response = await createBooking({
                 name: formData.name,
                 datetime: selectedSlot.datetime,
-                service: selectedService,
+                service: serviceObj.name, // Name is still required by backend
+                service_id: serviceObj.id, // UUID
                 email: formData.email || undefined,
                 phone: formData.phone || undefined,
                 notes: formData.notes || undefined,
             });
 
+            // Extract price from response if available
+            const priceDetails = response.booking.service_details;
+
             setBookingResult({
                 accountName: availability?.account_name || '',
                 date: selectedSlot.date,
                 time: selectedSlot.time,
-                service: selectedService,
+                service: serviceObj.name,
+                serviceDetails: priceDetails,
             });
             setStep('success');
         } catch (err) {
+            // ... rest of error handling
             if (err instanceof BookingApiError && err.isSlotTaken) {
                 setError('Ez az időpont már nem elérhető. Kérjük, válasszon másikat.');
                 setStep('time');
@@ -274,7 +332,7 @@ export function BookingWidget({ initialService }: BookingWidgetProps) {
     const handleBack = () => {
         switch (step) {
             case 'date':
-                if (allServices.length > 1) {
+                if (availableServices.length > 1) {
                     setStep('service');
                     setSelectedDate(null);
                 }
@@ -372,19 +430,33 @@ export function BookingWidget({ initialService }: BookingWidgetProps) {
                     {step === 'service' && (
                         <div className="booking-widget__fade-in">
                             <div className="booking-widget__service-list">
-                                {allServices.map((service) => (
-                                    <button
-                                        key={service}
-                                        type="button"
-                                        className="booking-widget__service-card"
-                                        onClick={() => handleServiceSelect(service)}
-                                    >
-                                        <span className="booking-widget__service-name">{service}</span>
-                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                            <path d="M9 18l6-6-6-6" />
-                                        </svg>
-                                    </button>
-                                ))}
+                                {availableServices.map((service) => {
+                                    const isObject = typeof service !== 'string';
+                                    const serviceId = isObject ? service.id : service;
+                                    const serviceName = isObject ? service.name : service;
+                                    const servicePrice = isObject ? `${service.price} ${service.currency}` : '';
+
+                                    return (
+                                        <button
+                                            key={serviceId}
+                                            type="button"
+                                            className="booking-widget__service-card"
+                                            onClick={() => handleServiceSelect(serviceId)}
+                                        >
+                                            <div className="flex flex-col items-start gap-1">
+                                                <span className="booking-widget__service-name text-left">{serviceName}</span>
+                                                {servicePrice && (
+                                                    <span className="text-sm text-gray-400 font-medium">
+                                                        {servicePrice}
+                                                    </span>
+                                                )}
+                                            </div>
+                                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                                <path d="M9 18l6-6-6-6" />
+                                            </svg>
+                                        </button>
+                                    );
+                                })}
                             </div>
                         </div>
                     )}
@@ -475,7 +547,7 @@ export function BookingWidget({ initialService }: BookingWidgetProps) {
                             </div>
 
                             {/* Navigation */}
-                            {allServices.length > 1 && (
+                            {availableServices.length > 1 && (
                                 <div className="booking-widget__nav">
                                     <button
                                         type="button"
@@ -698,6 +770,14 @@ export function BookingWidget({ initialService }: BookingWidgetProps) {
                                             {bookingResult.service}
                                         </span>
                                     </div>
+                                    {bookingResult.serviceDetails && (
+                                        <div className="booking-widget__success-row">
+                                            <span className="booking-widget__success-label">Ár</span>
+                                            <span className="booking-widget__success-value">
+                                                {bookingResult.serviceDetails.price} {bookingResult.serviceDetails.currency}
+                                            </span>
+                                        </div>
+                                    )}
                                     <div className="booking-widget__success-row">
                                         <span className="booking-widget__success-label">Dátum</span>
                                         <span className="booking-widget__success-value">

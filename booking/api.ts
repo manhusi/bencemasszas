@@ -35,14 +35,29 @@ export async function fetchAvailability(): Promise<AvailabilityResponse> {
     return response.json();
 }
 
-export async function createBooking(data: BookingRequest): Promise<void> {
+export interface BookingResponse {
+    success: boolean;
+    booking: {
+        id: string;
+        service_details?: {
+            price: number;
+            currency: string;
+            duration_minutes: number;
+        };
+    };
+}
+
+export async function createBooking(data: BookingRequest): Promise<BookingResponse> {
     const response = await fetch(`${BASE_URL}/create-booking`, {
         method: 'POST',
         headers: {
             'Authorization': `Bearer ${BOOKING_API_KEY}`,
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify({
+            ...data,
+            include_price: true, // Always request price
+        }),
     });
 
     if (response.status === 409) {
@@ -59,4 +74,6 @@ export async function createBooking(data: BookingRequest): Promise<void> {
             response.status
         );
     }
+
+    return response.json();
 }
