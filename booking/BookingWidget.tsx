@@ -22,16 +22,24 @@ function formatDate(dateStr: string): string {
     return `${year}. ${month} ${day}.`;
 }
 
+function formatShortDate(dateStr: string): string {
+    const date = new Date(dateStr);
+    const month = MONTHS[date.getMonth()];
+    const day = date.getDate();
+    return `${month} ${day}.`;
+}
+
 export function BookingWidget() {
-    const [step, setStep] = useState<BookingStep>('date');
+    const [step, setStep] = useState<BookingStep>('service');
     const [availability, setAvailability] = useState<AvailabilityResponse | null>(null);
     const [loading, setLoading] = useState(true);
     const [submitting, setSubmitting] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    const [selectedDate, setSelectedDate] = useState<string | null>(null);
-    const [selectedSlot, setSelectedSlot] = useState<Slot | null>(null);
     const [selectedService, setSelectedService] = useState<string | null>(null);
+    const [selectedDate, setSelectedDate] = useState<string | null>(null);
+    const [selectedHour, setSelectedHour] = useState<string | null>(null);
+    const [selectedMinute, setSelectedMinute] = useState<string | null>(null);
     const [currentMonth, setCurrentMonth] = useState(new Date());
 
     const [formData, setFormData] = useState<BookingFormData>({
@@ -52,9 +60,10 @@ export function BookingWidget() {
                 const data = await fetchAvailability();
                 setAvailability(data);
 
-                // Auto-select service if only one
+                // Auto-select service and skip to date if only one service
                 if (data.service_id.length === 1) {
                     setSelectedService(data.service_id[0]);
+                    setStep('date');
                 }
             } catch (err) {
                 setError(err instanceof Error ? err.message : 'Hiba történt');
@@ -66,17 +75,63 @@ export function BookingWidget() {
         loadAvailability();
     }, []);
 
-    // Get available dates
-    const availableDates = useMemo(() => {
-        if (!availability) return new Set<string>();
-        return new Set(availability.slots.map((slot) => slot.date));
+    // Get all available services
+    const allServices = useMemo(() => {
+        if (!availability) return [];
+        const servicesFromSlots = availability.slots.flatMap(s => s.available_services || []);
+        if (servicesFromSlots.length > 0) {
+            return [...new Set(servicesFromSlots)];
+        }
+        return availability.service_id || [];
     }, [availability]);
+
+    // Get slots filtered by selected service
+    const slotsForService = useMemo(() => {
+        if (!availability || !selectedService) return [];
+        const hasAvailableServices = availability.slots.some(
+            s => s.available_services && s.available_services.length > 0
+        );
+        if (hasAvailableServices) {
+            return availability.slots.filter(
+                s => s.available_services && s.available_services.includes(selectedService)
+            );
+        }
+        return availability.slots;
+    }, [availability, selectedService]);
+
+    // Get available dates for selected service
+    const availableDates = useMemo(() => {
+        return new Set(slotsForService.map(slot => slot.date));
+    }, [slotsForService]);
 
     // Get slots for selected date
     const slotsForDate = useMemo(() => {
-        if (!availability || !selectedDate) return [];
-        return availability.slots.filter((slot) => slot.date === selectedDate);
-    }, [availability, selectedDate]);
+        if (!selectedDate) return [];
+        return slotsForService.filter(slot => slot.date === selectedDate);
+    }, [slotsForService, selectedDate]);
+
+    // Get available hours for selected date (unique, sorted)
+    const availableHours = useMemo(() => {
+        const hours = [...new Set(slotsForDate.map(s => s.time.split(':')[0]))].sort();
+        return hours;
+    }, [slotsForDate]);
+
+    // Get slots for selected hour
+    const slotsForHour = useMemo(() => {
+        if (!selectedHour) return [];
+        return slotsForDate.filter(s => s.time.startsWith(selectedHour + ':'));
+    }, [slotsForDate, selectedHour]);
+
+    // Get available minutes for selected hour
+    const availableMinutes = useMemo(() => {
+        return slotsForHour.map(s => s.time.split(':')[1]);
+    }, [slotsForHour]);
+
+    // Get the selected slot
+    const selectedSlot = useMemo(() => {
+        if (!selectedHour || !selectedMinute) return null;
+        return slotsForHour.find(s => s.time === `${selectedHour}:${selectedMinute}`) || null;
+    }, [slotsForHour, selectedHour, selectedMinute]);
 
     // Calendar helpers
     const getDaysInMonth = (date: Date) => {
@@ -105,6 +160,15 @@ export function BookingWidget() {
     const today = new Date();
     const todayStr = formatDateKey(today.getFullYear(), today.getMonth(), today.getDate());
 
+    // Handlers
+    const handleServiceSelect = (service: string) => {
+        setSelectedService(service);
+        setSelectedDate(null);
+        setSelectedHour(null);
+        setSelectedMinute(null);
+        setStep('date');
+    };
+
     const handleDateSelect = (day: number) => {
         const dateKey = formatDateKey(
             currentMonth.getFullYear(),
@@ -112,16 +176,24 @@ export function BookingWidget() {
             day
         );
         setSelectedDate(dateKey);
-        setSelectedSlot(null);
+        setSelectedHour(null);
+        setSelectedMinute(null);
         setStep('time');
     };
 
-    const handleSlotSelect = (slot: Slot) => {
-        setSelectedSlot(slot);
+    const handleHourSelect = (hour: string) => {
+        setSelectedHour(hour);
+        setSelectedMinute(null);
     };
 
-    const handleServiceChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        setSelectedService(e.target.value);
+    const handleMinuteSelect = (minute: string) => {
+        setSelectedMinute(minute);
+    };
+
+    const handleContinueToForm = () => {
+        if (selectedSlot) {
+            setStep('form');
+        }
     };
 
     const handleFormChange = (
@@ -131,12 +203,6 @@ export function BookingWidget() {
             ...prev,
             [e.target.name]: e.target.value,
         }));
-    };
-
-    const handleContinueToForm = () => {
-        if (selectedSlot && selectedService) {
-            setStep('form');
-        }
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -167,7 +233,8 @@ export function BookingWidget() {
             if (err instanceof BookingApiError && err.isSlotTaken) {
                 setError('Ez az időpont már nem elérhető. Kérjük, válasszon másikat.');
                 setStep('time');
-                setSelectedSlot(null);
+                setSelectedHour(null);
+                setSelectedMinute(null);
             } else {
                 setError(err instanceof Error ? err.message : 'Hiba történt');
             }
@@ -177,30 +244,42 @@ export function BookingWidget() {
     };
 
     const handleReset = () => {
-        setStep('date');
+        setStep('service');
+        setSelectedService(null);
         setSelectedDate(null);
-        setSelectedSlot(null);
+        setSelectedHour(null);
+        setSelectedMinute(null);
         setFormData({ name: '', email: '', phone: '', notes: '' });
         setBookingResult(null);
         setError(null);
 
-        // Reload availability
         fetchAvailability()
             .then((data) => {
                 setAvailability(data);
                 if (data.service_id.length === 1) {
                     setSelectedService(data.service_id[0]);
+                    setStep('date');
                 }
             })
             .catch(() => { });
     };
 
     const handleBack = () => {
-        if (step === 'time') {
-            setStep('date');
-            setSelectedSlot(null);
-        } else if (step === 'form') {
-            setStep('time');
+        switch (step) {
+            case 'date':
+                if (allServices.length > 1) {
+                    setStep('service');
+                    setSelectedDate(null);
+                }
+                break;
+            case 'time':
+                setStep('date');
+                setSelectedHour(null);
+                setSelectedMinute(null);
+                break;
+            case 'form':
+                setStep('time');
+                break;
         }
     };
 
@@ -212,7 +291,19 @@ export function BookingWidget() {
         });
     };
 
-    const stepIndex = { date: 0, time: 1, form: 2, success: 3 };
+    const stepIndex = { service: 0, date: 1, time: 2, form: 3, success: 4 };
+    const totalSteps = 4;
+
+    // Get step subtitle
+    const getStepSubtitle = () => {
+        switch (step) {
+            case 'service': return 'Válasszon szolgáltatást';
+            case 'date': return 'Válasszon napot';
+            case 'time': return 'Válasszon időpontot';
+            case 'form': return 'Adja meg adatait';
+            case 'success': return 'Sikeres foglalás';
+        }
+    };
 
     // Loading state
     if (loading) {
@@ -236,10 +327,7 @@ export function BookingWidget() {
                         {availability?.account_name || 'Időpontfoglalás'}
                     </h2>
                     <p className="booking-widget__subtitle">
-                        {step === 'date' && 'Válasszon dátumot'}
-                        {step === 'time' && 'Válasszon időpontot'}
-                        {step === 'form' && 'Adja meg adatait'}
-                        {step === 'success' && 'Sikeres foglalás'}
+                        {getStepSubtitle()}
                     </p>
                 </div>
 
@@ -247,7 +335,7 @@ export function BookingWidget() {
                     {/* Step Indicator */}
                     {step !== 'success' && (
                         <div className="booking-widget__steps">
-                            {[0, 1, 2].map((i) => (
+                            {Array.from({ length: totalSteps }).map((_, i) => (
                                 <div
                                     key={i}
                                     className={`booking-widget__step-dot ${i === stepIndex[step]
@@ -273,9 +361,38 @@ export function BookingWidget() {
                         </div>
                     )}
 
-                    {/* Date Selection */}
+                    {/* Step 1: Service Selection */}
+                    {step === 'service' && (
+                        <div className="booking-widget__fade-in">
+                            <div className="booking-widget__service-list">
+                                {allServices.map((service) => (
+                                    <button
+                                        key={service}
+                                        type="button"
+                                        className="booking-widget__service-card"
+                                        onClick={() => handleServiceSelect(service)}
+                                    >
+                                        <span className="booking-widget__service-name">{service}</span>
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                            <path d="M9 18l6-6-6-6" />
+                                        </svg>
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Step 2: Date Selection */}
                     {step === 'date' && (
                         <div className="booking-widget__fade-in">
+                            {/* Selected Service Summary */}
+                            <div className="booking-widget__selection-summary">
+                                <span className="booking-widget__summary-text">
+                                    🎯 {selectedService}
+                                </span>
+                            </div>
+
+                            {/* Calendar */}
                             <div className="booking-widget__calendar">
                                 <div className="booking-widget__calendar-header">
                                     <span className="booking-widget__calendar-title">
@@ -331,7 +448,6 @@ export function BookingWidget() {
                                         );
                                         const hasSlots = availableDates.has(dateKey);
                                         const isToday = dateKey === todayStr;
-                                        const isSelected = dateKey === selectedDate;
                                         const isPast = new Date(dateKey) < new Date(todayStr);
 
                                         return (
@@ -339,7 +455,7 @@ export function BookingWidget() {
                                                 key={day}
                                                 type="button"
                                                 className={`booking-widget__day ${isToday ? 'booking-widget__day--today' : ''
-                                                    } ${isSelected ? 'booking-widget__day--selected' : ''} ${!hasSlots || isPast ? 'booking-widget__day--disabled' : ''
+                                                    } ${!hasSlots || isPast ? 'booking-widget__day--disabled' : ''
                                                     } ${hasSlots && !isPast ? 'booking-widget__day--has-slots' : ''}`}
                                                 onClick={() => hasSlots && !isPast && handleDateSelect(day)}
                                                 disabled={!hasSlots || isPast}
@@ -350,66 +466,74 @@ export function BookingWidget() {
                                     })}
                                 </div>
                             </div>
+
+                            {/* Navigation */}
+                            {allServices.length > 1 && (
+                                <div className="booking-widget__nav">
+                                    <button
+                                        type="button"
+                                        className="booking-widget__button booking-widget__button--secondary"
+                                        onClick={handleBack}
+                                    >
+                                        Vissza
+                                    </button>
+                                </div>
+                            )}
                         </div>
                     )}
 
-                    {/* Time Selection */}
+                    {/* Step 3: Time Selection (Hour + Minute on ONE screen) */}
                     {step === 'time' && (
                         <div className="booking-widget__fade-in">
-                            {/* Selected Date Summary */}
-                            <div className="booking-widget__selected-summary">
-                                <span className="booking-widget__selected-info">
-                                    📅 {selectedDate && formatDate(selectedDate)}
+                            {/* Summary */}
+                            <div className="booking-widget__selection-summary">
+                                <span className="booking-widget__summary-text">
+                                    🎯 {selectedService} • {selectedDate && formatShortDate(selectedDate)}
+                                    {selectedHour && selectedMinute && ` • ${selectedHour}:${selectedMinute}`}
                                 </span>
-                                <button
-                                    type="button"
-                                    className="booking-widget__selected-change"
-                                    onClick={handleBack}
-                                >
-                                    Módosítás
-                                </button>
                             </div>
 
-                            {/* Service Selector */}
-                            {availability && availability.service_id.length > 1 && (
-                                <div className="booking-widget__service-selector">
-                                    <label className="booking-widget__label">Szolgáltatás</label>
-                                    <select
-                                        className="booking-widget__select"
-                                        value={selectedService || ''}
-                                        onChange={handleServiceChange}
-                                    >
-                                        <option value="">Válasszon szolgáltatást...</option>
-                                        {availability.service_id.map((service) => (
-                                            <option key={service} value={service}>
-                                                {service}
-                                            </option>
-                                        ))}
-                                    </select>
-                                </div>
-                            )}
-
-                            {/* Time Slots */}
-                            <label className="booking-widget__label">Elérhető időpontok</label>
-                            {slotsForDate.length > 0 ? (
-                                <div className="booking-widget__slots">
-                                    {slotsForDate.map((slot) => (
+                            {/* Hour Selection */}
+                            <div className="booking-widget__time-section">
+                                <label className="booking-widget__label booking-widget__label--step">
+                                    <span className="booking-widget__step-number">1</span>
+                                    Válasszon órát
+                                </label>
+                                <div className="booking-widget__time-grid">
+                                    {availableHours.map((hour) => (
                                         <button
-                                            key={slot.datetime}
+                                            key={hour}
                                             type="button"
-                                            className={`booking-widget__slot ${selectedSlot?.datetime === slot.datetime
-                                                ? 'booking-widget__slot--selected'
-                                                : ''
+                                            className={`booking-widget__time-btn ${selectedHour === hour ? 'booking-widget__time-btn--selected' : ''
                                                 }`}
-                                            onClick={() => handleSlotSelect(slot)}
+                                            onClick={() => handleHourSelect(hour)}
                                         >
-                                            {slot.time}
+                                            {hour}:00
                                         </button>
                                     ))}
                                 </div>
-                            ) : (
-                                <div className="booking-widget__empty">
-                                    Nincs elérhető időpont ezen a napon
+                            </div>
+
+                            {/* Minute Selection (appears after hour is selected) */}
+                            {selectedHour && (
+                                <div className="booking-widget__time-section booking-widget__fade-in">
+                                    <label className="booking-widget__label booking-widget__label--step">
+                                        <span className="booking-widget__step-number">2</span>
+                                        Válasszon percet
+                                    </label>
+                                    <div className="booking-widget__time-grid">
+                                        {availableMinutes.map((minute) => (
+                                            <button
+                                                key={minute}
+                                                type="button"
+                                                className={`booking-widget__time-btn ${selectedMinute === minute ? 'booking-widget__time-btn--selected' : ''
+                                                    }`}
+                                                onClick={() => handleMinuteSelect(minute)}
+                                            >
+                                                {selectedHour}:{minute}
+                                            </button>
+                                        ))}
+                                    </div>
                                 </div>
                             )}
 
@@ -426,7 +550,7 @@ export function BookingWidget() {
                                     type="button"
                                     className="booking-widget__button booking-widget__button--primary"
                                     onClick={handleContinueToForm}
-                                    disabled={!selectedSlot || !selectedService}
+                                    disabled={!selectedSlot}
                                 >
                                     Tovább
                                 </button>
@@ -434,21 +558,14 @@ export function BookingWidget() {
                         </div>
                     )}
 
-                    {/* Form */}
+                    {/* Step 4: Form */}
                     {step === 'form' && (
                         <div className="booking-widget__fade-in">
                             {/* Selected Summary */}
-                            <div className="booking-widget__selected-summary">
-                                <span className="booking-widget__selected-info">
-                                    📅 {selectedDate && formatDate(selectedDate)} – {selectedSlot?.time}
+                            <div className="booking-widget__selection-summary">
+                                <span className="booking-widget__summary-text">
+                                    🎯 {selectedService} • {selectedDate && formatShortDate(selectedDate)} • {selectedHour}:{selectedMinute}
                                 </span>
-                                <button
-                                    type="button"
-                                    className="booking-widget__selected-change"
-                                    onClick={() => setStep('time')}
-                                >
-                                    Módosítás
-                                </button>
                             </div>
 
                             <form className="booking-widget__form" onSubmit={handleSubmit}>
@@ -554,6 +671,12 @@ export function BookingWidget() {
                                         </span>
                                     </div>
                                     <div className="booking-widget__success-row">
+                                        <span className="booking-widget__success-label">Szolgáltatás</span>
+                                        <span className="booking-widget__success-value">
+                                            {bookingResult.service}
+                                        </span>
+                                    </div>
+                                    <div className="booking-widget__success-row">
                                         <span className="booking-widget__success-label">Dátum</span>
                                         <span className="booking-widget__success-value">
                                             {formatDate(bookingResult.date)}
@@ -563,12 +686,6 @@ export function BookingWidget() {
                                         <span className="booking-widget__success-label">Időpont</span>
                                         <span className="booking-widget__success-value">
                                             {bookingResult.time}
-                                        </span>
-                                    </div>
-                                    <div className="booking-widget__success-row">
-                                        <span className="booking-widget__success-label">Szolgáltatás</span>
-                                        <span className="booking-widget__success-value">
-                                            {bookingResult.service}
                                         </span>
                                     </div>
                                 </div>

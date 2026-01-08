@@ -1,15 +1,16 @@
 // Booking Component Types
 
 export interface Slot {
-  date: string;      // YYYY-MM-DD
-  time: string;      // HH:MM
-  datetime: string;  // ISO string
+  date: string;              // YYYY-MM-DD
+  time: string;              // HH:MM
+  datetime: string;          // ISO string
+  available_services: string[];  // Szolgáltatások, amik ezen a slot-on elérhetők
 }
 
 export interface AvailabilityResponse {
   account_name: string;
   slots: Slot[];
-  service_id: string[];  // szolgáltatás nevek
+  service_id: string[];  // szolgáltatás nevek (fallback)
 }
 
 export interface BookingRequest {
@@ -28,7 +29,7 @@ export interface BookingFormData {
   notes: string;
 }
 
-export type BookingStep = 'date' | 'time' | 'form' | 'success';
+export type BookingStep = 'service' | 'date' | 'time' | 'form' | 'success';
 
 export interface BookingResult {
   accountName: string;

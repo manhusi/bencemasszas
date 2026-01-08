@@ -638,3 +638,255 @@
     transform: translateY(0);
   }
 }
+
+/* ====== NEW: Pill Grid for Hour/Minute Selection ====== */
+.booking-widget__pill-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+@media (max-width: 400px) {
+  .booking-widget__pill-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.booking-widget__pill {
+  padding: 14px 8px;
+  border: 1px solid var(--bw-border);
+  background: transparent;
+  border-radius: var(--bw-radius);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--bw-text-muted);
+  cursor: pointer;
+  transition: var(--bw-transition);
+  text-align: center;
+}
+
+.booking-widget__pill:hover {
+  border-color: var(--bw-primary);
+  background: var(--bw-primary-light);
+  color: var(--bw-primary);
+  transform: translateY(-2px);
+}
+
+.booking-widget__pill--selected {
+  border-color: var(--bw-primary);
+  background: var(--bw-primary);
+  color: var(--bw-bg-dark);
+  box-shadow: 0 0 16px rgba(212, 175, 55, 0.4);
+}
+
+.booking-widget__pill--selected:hover {
+  background: var(--bw-primary-hover);
+  color: var(--bw-bg-dark);
+  transform: translateY(-2px);
+}
+
+/* ====== NEW: Service Cards ====== */
+.booking-widget__service-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.booking-widget__service-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border: 1px solid var(--bw-border);
+  background: var(--bw-bg-hover);
+  border-radius: var(--bw-radius);
+  cursor: pointer;
+  transition: var(--bw-transition);
+}
+
+.booking-widget__service-card:hover {
+  border-color: var(--bw-primary);
+  background: var(--bw-primary-light);
+  transform: translateX(4px);
+}
+
+.booking-widget__service-card:hover .booking-widget__service-name {
+  color: var(--bw-primary);
+}
+
+.booking-widget__service-card:hover svg {
+  color: var(--bw-primary);
+}
+
+.booking-widget__service-card--selected {
+  border-color: var(--bw-primary);
+  background: var(--bw-primary);
+}
+
+.booking-widget__service-card--selected .booking-widget__service-name {
+  color: var(--bw-bg-dark);
+}
+
+.booking-widget__service-card--selected svg {
+  color: var(--bw-bg-dark);
+}
+
+.booking-widget__service-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--bw-text);
+  transition: var(--bw-transition);
+}
+
+.booking-widget__service-card svg {
+  color: var(--bw-text-dim);
+  transition: var(--bw-transition);
+}
+
+/* ====== NEW: Selection Summary (Breadcrumb-like) ====== */
+.booking-widget__selection-summary {
+  background: var(--bw-primary-light);
+  border-radius: var(--bw-radius);
+  padding: 12px 16px;
+  margin-bottom: 20px;
+  border: 1px solid var(--bw-border);
+}
+
+.booking-widget__summary-text {
+  font-size: 14px;
+  color: var(--bw-primary);
+  font-weight: 500;
+}
+
+/* ====== Timeslots Section (Combined DateTime View) ====== */
+.booking-widget__timeslots-section {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid var(--bw-border);
+  animation: bw-fade-in 0.3s ease;
+}
+
+.booking-widget__slots {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+@media (max-width: 400px) {
+  .booking-widget__slots {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.booking-widget__slot {
+  padding: 12px 8px;
+  border: 1px solid var(--bw-border);
+  background: transparent;
+  border-radius: var(--bw-radius);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--bw-text-muted);
+  cursor: pointer;
+  transition: var(--bw-transition);
+  text-align: center;
+}
+
+.booking-widget__slot:hover {
+  border-color: var(--bw-primary);
+  background: var(--bw-primary-light);
+  color: var(--bw-primary);
+  transform: translateY(-2px);
+}
+
+.booking-widget__slot--selected {
+  border-color: var(--bw-primary);
+  background: var(--bw-primary);
+  color: var(--bw-bg-dark);
+  box-shadow: 0 0 12px rgba(212, 175, 55, 0.3);
+}
+
+.booking-widget__slot--selected:hover {
+  background: var(--bw-primary-hover);
+  color: var(--bw-bg-dark);
+}
+
+/* ====== Time Section (Hour + Minute with Steps) ====== */
+.booking-widget__time-section {
+  margin-bottom: 24px;
+}
+
+.booking-widget__time-section+.booking-widget__time-section {
+  padding-top: 20px;
+  border-top: 1px solid var(--bw-border);
+}
+
+.booking-widget__label--step {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--bw-text);
+  margin-bottom: 12px;
+}
+
+.booking-widget__step-number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  background: var(--bw-primary);
+  color: var(--bw-bg-dark);
+  border-radius: 50%;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.booking-widget__time-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+@media (max-width: 400px) {
+  .booking-widget__time-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.booking-widget__time-btn {
+  padding: 14px 8px;
+  border: 1px solid var(--bw-border);
+  background: transparent;
+  border-radius: var(--bw-radius);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--bw-text-muted);
+  cursor: pointer;
+  transition: var(--bw-transition);
+  text-align: center;
+}
+
+.booking-widget__time-btn:hover {
+  border-color: var(--bw-primary);
+  background: var(--bw-primary-light);
+  color: var(--bw-primary);
+  transform: translateY(-2px);
+}
+
+.booking-widget__time-btn--selected {
+  border-color: var(--bw-primary);
+  background: var(--bw-primary);
+  color: var(--bw-bg-dark);
+  box-shadow: 0 0 16px rgba(212, 175, 55, 0.4);
+}
+
+.booking-widget__time-btn--selected:hover {
+  background: var(--bw-primary-hover);
+  color: var(--bw-bg-dark);
+  transform: translateY(-2px);
+}
