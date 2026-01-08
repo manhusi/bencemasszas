@@ -8,6 +8,7 @@ import { Testimonials } from './components/Testimonials';
 import { FAQ } from './components/FAQ';
 import { Footer } from './components/Footer';
 import { BookingPage } from './components/BookingPage';
+import { PrivacyPolicy } from './components/PrivacyPolicy';
 
 // Landing Page Component
 function LandingPage() {
@@ -30,6 +31,7 @@ function App() {
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/foglalas" element={<BookingPage />} />
+        <Route path="/adatvedelem" element={<PrivacyPolicy />} />
       </Routes>
     </div>
   );

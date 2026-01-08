@@ -56,7 +56,7 @@ export const Footer: React.FC = () => {
         <div className="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center text-gray-500 text-sm">
           <p>&copy; {new Date().getFullYear()} Bence Masszázs Szalon. Minden jog fenntartva.</p>
           <div className="flex gap-6 mt-4 md:mt-0">
-            <a href="#" className="hover:text-gold-400 transition-colors">Adatkezelés</a>
+            <a href="/adatvedelem" className="hover:text-gold-400 transition-colors">Adatkezelés</a>
             <a href="#" className="hover:text-gold-400 transition-colors">ÁSZF</a>
           </div>
         </div>
