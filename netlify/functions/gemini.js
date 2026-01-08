@@ -63,6 +63,32 @@ export const handler = async (event) => {
 
         if (!response.ok) {
             console.error("Gemini API Error:", JSON.stringify(data));
+
+            // Debugging: If model not found, try to list available models
+            if (response.status === 404) {
+                try {
+                    console.log("Model not found. Fetching available models...");
+                    const listResp = await fetch(
+                        `https://generativelanguage.googleapis.com/v1beta/models?key=${apiKey}`
+                    );
+                    const listData = await listResp.json();
+                    console.log("Available models:", JSON.stringify(listData));
+
+                    // Return the list of available models in the error response for visibility
+                    return {
+                        statusCode: 404,
+                        headers,
+                        body: JSON.stringify({
+                            error: data.error,
+                            debug_hint: "Model not found. See 'available_models' for valid options.",
+                            available_models: listData
+                        })
+                    };
+                } catch (listErr) {
+                    console.error("Failed to list models:", listErr);
+                }
+            }
+
             return {
                 statusCode: response.status,
                 headers,
