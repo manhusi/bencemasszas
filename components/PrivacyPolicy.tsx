@@ -121,33 +121,7 @@ export const PrivacyPolicy: React.FC = () => {
                         </div>
                     </section>
 
-                    {/* 5. Cancellation Policy */}
-                    <section className="bg-gray-900/50 backdrop-blur-sm border border-gray-800 rounded-2xl p-8">
-                        <div className="flex items-center gap-3 mb-6">
-                            <FileText className="text-gold-400" size={28} />
-                            <h2 className="text-2xl font-bold text-white">5. Lemondási feltételek és Házirend</h2>
-                        </div>
-                        <div className="space-y-4 text-gray-300 leading-relaxed">
-                            <p>
-                                A zavartalan működés és a többi vendég érdekében az alábbi szabályok betartását kérjük:
-                            </p>
-                            <ul className="list-disc pl-6 space-y-2 text-gray-400">
-                                <li><strong>Lemondás/Módosítás:</strong> A kezelés előtt 48 órával díjmentes. 24-48 órán belüli jelzés esetén felár fizetendő.</li>
-                                <li><strong>Helyszíni lemondás / Meg nem jelenés:</strong> A kezelés teljes díja fizetendő.</li>
-                                <li><strong>Következmény:</strong> Előzetes értesítés nélküli meg nem jelenés esetén a szolgáltató jogosult a további időpontok kiadását megtagadni.</li>
-                                <li><strong>Ajándékutalvány:</strong> Meg nem jelenés esetén felhasználtnak minősül.</li>
-                            </ul>
-                            <div className="mt-4 p-4 bg-black/40 rounded-xl border border-gray-800">
-                                <h3 className="text-gold-400 font-bold mb-2 text-sm">Bérletek érvényessége:</h3>
-                                <ul className="grid grid-cols-2 gap-2 text-sm">
-                                    <li>3 alkalom: 5 hónap</li>
-                                    <li>5 alkalom: 6 hónap</li>
-                                    <li>8 alkalom: 8 hónap</li>
-                                    <li>10 alkalom: 12 hónap</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </section>
+
 
                     {/* Footer Note */}
                     <div className="text-center text-gray-500 text-sm mt-12 pb-8">
