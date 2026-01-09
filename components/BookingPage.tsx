@@ -108,19 +108,32 @@ export const BookingPage: React.FC = () => {
         <div className="max-w-lg mx-auto mb-12">
 
           {/* Payment Methods */}
-          <div className="flex flex-wrap justify-center items-center gap-x-6 gap-y-2 mb-6 text-sm text-gray-400 bg-gray-900/40 py-3 rounded-xl border border-gray-800/50 backdrop-blur-sm">
-            <span className="text-xs uppercase tracking-wider font-semibold text-gray-500 mr-2">Fizetés:</span>
-            <div className="flex items-center gap-1.5 text-gray-300">
-              <CreditCard size={14} className="text-gold-400" />
-              <span>Bankkártya</span>
+          <div className="flex justify-center gap-4 sm:gap-8 mb-8">
+            {/* Bank Card */}
+            <div className="flex flex-col items-center gap-2 group cursor-default">
+              <div className="w-14 h-14 rounded-full bg-gradient-to-br from-gray-800 to-black border border-gray-700 group-hover:border-gold-400/50 flex items-center justify-center shadow-lg shadow-black/50 group-hover:shadow-gold-400/10 transition-all duration-300">
+                <CreditCard size={24} className="text-gray-400 group-hover:text-gold-400 transition-colors" />
+              </div>
+              <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-gray-500 group-hover:text-gold-400 transition-colors">Bankkártya</span>
             </div>
-            <div className="flex items-center gap-1.5 text-gray-300">
-              <CreditCard size={14} className="text-gold-400" />
-              <span>SZÉP kártya</span>
+
+            {/* SZÉP Card */}
+            <div className="flex flex-col items-center gap-2 group cursor-default">
+              <div className="w-14 h-14 rounded-full bg-gradient-to-br from-gray-800 to-black border border-gray-700 group-hover:border-gold-400/50 flex items-center justify-center shadow-lg shadow-black/50 group-hover:shadow-gold-400/10 transition-all duration-300">
+                <div className="relative">
+                  <CreditCard size={24} className="text-gray-400 group-hover:text-gold-400 transition-colors" />
+                  <span className="absolute -bottom-1 -right-2 text-[8px] font-bold bg-gold-400 text-black px-1 rounded-sm leading-tight">SZÉP</span>
+                </div>
+              </div>
+              <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-gray-500 group-hover:text-gold-400 transition-colors">SZÉP kártya</span>
             </div>
-            <div className="flex items-center gap-1.5 text-gray-300">
-              <Banknote size={14} className="text-gold-400" />
-              <span>Készpénz</span>
+
+            {/* Cash */}
+            <div className="flex flex-col items-center gap-2 group cursor-default">
+              <div className="w-14 h-14 rounded-full bg-gradient-to-br from-gray-800 to-black border border-gray-700 group-hover:border-gold-400/50 flex items-center justify-center shadow-lg shadow-black/50 group-hover:shadow-gold-400/10 transition-all duration-300">
+                <Banknote size={24} className="text-gray-400 group-hover:text-gold-400 transition-colors" />
+              </div>
+              <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-gray-500 group-hover:text-gold-400 transition-colors">Készpénz</span>
             </div>
           </div>
 
