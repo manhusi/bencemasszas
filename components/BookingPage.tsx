@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, Calendar, Clock, MapPin, Star, Sparkles, Bot } from 'lucide-react';
+import { ArrowLeft, Calendar, Clock, MapPin, Star, Sparkles, Bot, CreditCard, Banknote } from 'lucide-react';
 import { BookingWidget } from '../booking/BookingWidget';
 import '../booking/styles.css';
 
@@ -106,6 +106,24 @@ export const BookingPage: React.FC = () => {
 
         {/* Booking Widget Container */}
         <div className="max-w-lg mx-auto mb-12">
+
+          {/* Payment Methods */}
+          <div className="flex flex-wrap justify-center items-center gap-x-6 gap-y-2 mb-6 text-sm text-gray-400 bg-gray-900/40 py-3 rounded-xl border border-gray-800/50 backdrop-blur-sm">
+            <span className="text-xs uppercase tracking-wider font-semibold text-gray-500 mr-2">Fizetés:</span>
+            <div className="flex items-center gap-1.5 text-gray-300">
+              <CreditCard size={14} className="text-gold-400" />
+              <span>Bankkártya</span>
+            </div>
+            <div className="flex items-center gap-1.5 text-gray-300">
+              <CreditCard size={14} className="text-gold-400" />
+              <span>SZÉP kártya</span>
+            </div>
+            <div className="flex items-center gap-1.5 text-gray-300">
+              <Banknote size={14} className="text-gold-400" />
+              <span>Készpénz</span>
+            </div>
+          </div>
+
           <BookingWidget initialService={recommendedService} />
         </div>
 
