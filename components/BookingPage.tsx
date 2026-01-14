@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, Calendar, Clock, MapPin, Star, Sparkles, Bot, CreditCard, Banknote } from 'lucide-react';
+import { ArrowLeft, Calendar, Clock, MapPin, Star, Sparkles, Bot, CreditCard, Banknote, AlertCircle } from 'lucide-react';
 import { BookingWidget } from '../booking/BookingWidget';
 import '../booking/styles.css';
 
@@ -137,6 +137,12 @@ export const BookingPage: React.FC = () => {
             </div>
           </div>
 
+          {/* Warning: Arrive Alone */}
+          <div className="flex items-center justify-center gap-2 text-gold-400 text-xs sm:text-sm font-medium mb-8 bg-gold-400/10 py-2 px-4 rounded-lg border border-gold-400/20 max-w-fit mx-auto text-center">
+            <AlertCircle size={16} className="shrink-0" />
+            <span>Kérlek, a masszázsra egyedül érkezz, kísérőt nem tudok fogadni.</span>
+          </div>
+
           <BookingWidget initialService={recommendedService} />
         </div>
 
@@ -193,8 +199,8 @@ export const BookingPage: React.FC = () => {
         <p className="text-center text-gray-500 text-sm mt-8 max-w-md mx-auto">
           A foglalás után visszaigazolást kapsz. Ha kérdésed van, keress bátran!
         </p>
-      </main>
-    </div>
+      </main >
+    </div >
   );
 };
 
